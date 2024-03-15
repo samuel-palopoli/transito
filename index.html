@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transito</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      font-family: arial;
+      color: #fff;
+    }
+
+    body {
+      background: #ffffff;
+      display: grid;
+      justify-content: center;
+      align-content: center;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      padding: 10px;
+      font-size: 16px;
+      color: rgb(0, 0, 0);
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      flex-direction: column;
+      background-size: cover;
+    }
+
+    main {
+      margin-top: 15%;
+      text-align: center;
+    }
+
+    h1 {
+      color: rgb(0, 0, 0);
+    }
+
+ 
+
+    input {
+      padding: 8px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 2px solid rgb(55, 8, 182);
+    }
+
+    .pokemon-info img {
+      height: 250px;
+      width: 250px;
+    }
+
+    #momento {
+      font-size: 200%;
+      margin-bottom: 10px;
+      color: rgb(0, 0, 0);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    /* Estilos para Groudon */
+    .pokemon-info.groudon img {
+      border: 5px solid red;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px 0px rgba(255, 0, 0, 0.7);
+    
+    }
+
+    /* Estilos para Rayquaza */
+    .pokemon-info.rayquaza img {
+      border: 5px solid blue;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px 0px rgba(0, 0, 255, 0.7);
+   
+    }
+
+    /* Estilos para Kyogre */
+    .pokemon-info.kyogre {
+      border: 5px solid green;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px 0px rgba(0, 255, 0, 0.7);
+      
+    }
+
+
+
+   
+    .groudon {
+      background-image: url(images/vulcão1.jpg);
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+
+    }
+
+
+    .rayquaza {
+      background-image: url(images/Johto.jpg);
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+   
+    }
+
+
+    .kyogre {
+      background-image: url(images/mar.jpg);
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <section id="momento">No momento está:</section>
+    <div class="pokemon-container">
+      <div class="pokemon-info" id="infopok"></div>
+    </div>
+  </main>
+  <script>
+    let momento = document.getElementById("momento")
+    let pokemon = document.getElementById("infopok")
+    let estadoAnterior=null
+    fetch("https://niloweb.com.br/transit-room/api/reg_endpoint.php")
+      .then(resposta => resposta.json()
+        .then(dados1 => {
+          if (dados1[0].res == "B") {
+            console.log(dados1)
+            momento.innerHTML = `No momento está bloqueado`
+            pokemon.innerHTML = `
+                            <img src="images/groudon.png" alt="">
+                        `
+            document.body.classList.add('groudon');
+          } else if (dados1[0].res == "L") {
+            console.log(dados1)
+            momento.innerHTML = `No momento está livre`
+            pokemon.innerHTML = `
+                            <img src="images/rayquaza.png" alt="">
+                        `
+            document.body.classList.add('rayquaza');
+          } else {
+            console.log(dados1)
+            momento.innerHTML = `No momento está aguardando`
+            pokemon.innerHTML = `
+                            <img src="images/kyogre1.jpg.png" alt="">
+                        `
+            document.body.classList.add('kyogre');
+          }
+        })
+      )
+
+    function checar() {
+
+
+      
+      fetch("https://niloweb.com.br/transit-room/api/reg_endpoint.php")
+        .then(resposta => resposta.json()
+          .then(dados1 => {
+
+            if(dados1[0].res !== estadoAnterior){
+              estadoAnterior = dados1[0].res;
+          
+
+
+            document.body.classList.remove('groudon', 'rayquaza', 'kyogre');
+
+            if (dados1[0].res == "B") {
+              console.log(dados1)
+              momento.innerHTML = `No momento está bloqueado`
+              pokemon.innerHTML = `
+                                <img src="images/groudon.png" alt="">
+                            `
+                            document.body.classList.add('groudon');
+                            playSound();
+            } else if (dados1[0].res == "L") {
+              console.log(dados1)
+              momento.innerHTML = `No momento está livre`
+              pokemon.innerHTML = `
+                                <img src="images/rayquaza.png" alt="">
+                            `
+                            document.body.classList.add('rayquaza');
+                            playSound();
+            } else {
+              console.log(dados1)
+              momento.innerHTML = `No momento está aguardando`
+              pokemon.innerHTML = `
+                                <img src="images/kyogre1.jpg.png" alt="">
+                            `
+                            document.body.classList.add('kyogre');
+                            playSound();
+            }
+          }
+          })
+        )
+    }
+
+    function playSound() {
+    const audio = new Audio ('audios/c-moon_C6JChT9.mp3')
+                audio.onended = function() {
+            };
+            audio.play();
+        }
+        document.body.addEventListener('onLoad', function() {
+            playSound();
+        });
+    checar
+    setInterval(checar, 1000)
+  playSound()
+  </script>
+</body>
+
+</html>

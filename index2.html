@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transito</title>
+</head>
+<body>
+    <section id="momento">No momento está:</section>
+    <div id="infopok">
+       
+    </div>
+</body>
+<script>
+    let momento=document.getElementById("momento")
+    let pokemon=document.getElementById("infopok")
+    fetch("https://niloweb.com.br/transit-room/api/reg_endpoint.php")
+    .then(resposta=>resposta.json()
+    .then(dados1=>{
+        if(dados1[0].res=="B"){
+            fetch("https://pokeapi.co/api/v2/pokemon/groundon")
+        .then(resposta=>resposta.json())
+        .then(dados=>{
+            console.log(dados)
+            momento.innerHTML=`No momento esta bloqueado`
+            pokemon.innerHTML=`
+            <img src="${dados.sprites.front_default}" alt="${dados.name}">
+            `
+        })
+        }
+       else if(dados1[0].res=="L"){
+        fetch("https://pokeapi.co/api/v2/pokemon/rayquaza")
+        .then(resposta=>resposta.json())
+        .then(dados=>{
+            console.log(dados)
+            momento.innerHTML=`No momento esta livre`
+            pokemon.innerHTML=`
+            <img src="${dados.sprites.front_default}" alt="${dados.name}">
+            `
+        })
+       }
+       else{
+        fetch("https://pokeapi.co/api/v2/pokemon/kyogre")
+        .then(resposta=>resposta.json())
+        .then(dados=>{
+            console.log(dados)
+            momento.innerHTML=`No momento esta aguardando`
+            pokemon.innerHTML=`
+            <img src="${dados.sprites.front_default}" alt="${dados.name}">
+            `
+        })
+       }
+       
+    })
+    )
+</script>
+</html>
